@@ -61,7 +61,7 @@ func (r Repository) GetAllCategories(ctx context.Context) ([]Categoria, error) {
 	return categorias, nil
 }
 
-func (r Repository) CreateCategories(ctx context.Context, categorias []Categoria) error {
+func (r Repository) UpsaveCategories(ctx context.Context, categorias []Categoria) error {
 	tx, err := r.DB.BeginTx(ctx, nil)
 	if err != nil {
 		return fmt.Errorf("erro ao iniciar transação: %w", err)

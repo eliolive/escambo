@@ -6,7 +6,7 @@ import (
 	"escambo/internal/postagem/posthandler"
 	"escambo/internal/postagem/postrepo"
 	"escambo/internal/postagem/postsvc"
-	usuariohandler "escambo/internal/usuario/usuarioandler"
+	"escambo/internal/usuario/usuariohandler"
 	"escambo/internal/usuario/usuariorepo"
 	"escambo/internal/usuario/usuariosvc"
 	"log"

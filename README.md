@@ -16,9 +16,8 @@
 ### Passos para subir o ambiente
 
 ```bash
-go mod tidy                 # Instala as dependências Go
-docker compose up -d       # Sobe os containers (ex: Postgres)
-go run cmd/main.go         # Executa a aplicação
+go mod tidy                # Instala as dependências Go
+make run                   # Executa a aplicação
 ```
 ## 🧱 Migrations
 
