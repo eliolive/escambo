@@ -1,6 +1,8 @@
 package postrepo
 
-import "time"
+import (
+	"time"
+)
 
 type Post struct {
 	ID              string    `json:"id"`

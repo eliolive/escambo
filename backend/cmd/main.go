@@ -6,6 +6,9 @@ import (
 	"escambo/internal/postagem/posthandler"
 	"escambo/internal/postagem/postrepo"
 	"escambo/internal/postagem/postsvc"
+	"escambo/internal/proposta/propostahandler"
+	"escambo/internal/proposta/propostarepo"
+	"escambo/internal/proposta/propostasvc"
 	"escambo/internal/usuario/usuariohandler"
 	"escambo/internal/usuario/usuariorepo"
 	"escambo/internal/usuario/usuariosvc"
@@ -51,6 +54,13 @@ func main() {
 	usuarioHandler := usuariohandler.NewHandler(usuarioService)
 
 	r.HandleFunc("/usuarios", usuarioHandler.UpsertUsuario).Methods("PUT")
+
+	propostaRepo := propostarepo.NewRepository(db)
+	propostaService := propostasvc.NewService(propostaRepo)
+	propostaHandler := propostahandler.NewHandler(&propostaService)
+
+	r.HandleFunc("/propostas", propostaHandler.UpsaveProposta).Methods("PUT")
+	r.HandleFunc("/propostas", propostaHandler.GetPropostasByID).Methods("GET")
 
 	log.Println("Servidor rodando na porta 8080...")
 	log.Fatal(http.ListenAndServe(":8080", r))

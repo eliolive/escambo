@@ -3,8 +3,6 @@ package postrepo
 import (
 	"context"
 	"database/sql"
-
-	"github.com/google/uuid"
 )
 
 type Repository struct {
@@ -18,8 +16,6 @@ func NewRepository(db *sql.DB) Repository {
 }
 
 func (r Repository) UpsavePost(ctx context.Context, post Post) error {
-	postID := uuid.New()
-
 	query := `
 		INSERT INTO postagens (id, titulo, descricao, imagem_url, user_id, categoria_id)
 		VALUES ($1, $2, $3, $4, $5, $6)
@@ -33,7 +29,7 @@ func (r Repository) UpsavePost(ctx context.Context, post Post) error {
 
 	_, err := r.DB.ExecContext(ctx,
 		query,
-		postID,
+		post.ID,
 		post.Titulo,
 		post.Descricao,
 		post.ImagemURL,
@@ -55,7 +51,6 @@ func (r Repository) GetPostByID(ctx context.Context, postID string) (Post, error
 			p.descricao, 
 			p.imagem_url, 
 			p.user_id, 
-			p.categoria_id, 
 			p.created_at, 
 			p.updated_at,
 			c.id AS categoria_id,
@@ -74,7 +69,7 @@ func (r Repository) GetPostByID(ctx context.Context, postID string) (Post, error
 		&post.CreatedAt,
 		&post.UpdatedAt,
 		&post.CategoriaID,
-		&post.CategoriaID,
+		&post.TituloCategoria,
 	)
 	if err != nil {
 		return Post{}, err

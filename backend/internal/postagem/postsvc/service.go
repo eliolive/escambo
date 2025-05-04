@@ -5,6 +5,8 @@ import (
 	"escambo/internal/categoria/categoriarepo"
 	"escambo/internal/postagem/postrepo"
 	"fmt"
+
+	"github.com/google/uuid"
 )
 
 type PostRepository interface {
@@ -36,12 +38,21 @@ func (s Service) UpsavePost(ctx context.Context, post Post) error {
 		return err
 	}
 
+	if post.ID == "" {
+		newID, err := uuid.NewRandom()
+		if err != nil {
+			return fmt.Errorf("erro ao gerar UUID: %w", err)
+		}
+		post.ID = newID.String()
+	}
+
 	categoria, err := s.CategoryRepo.GetCategoryByTitle(ctx, post.TituloCategoria)
 	if err != nil {
 		return fmt.Errorf("erro ao buscar categoria: %w", err)
 	}
 
 	err = s.PostRepo.UpsavePost(ctx, postrepo.Post{
+		ID:              post.ID,
 		Titulo:          post.Titulo,
 		Descricao:       post.Descricao,
 		ImagemURL:       post.ImagemURL,

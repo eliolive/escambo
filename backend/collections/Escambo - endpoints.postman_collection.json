@@ -1,0 +1,149 @@
+{
+	"info": {
+		"_postman_id": "590cce84-8c3b-44c2-b216-399bfb22f6d1",
+		"name": "Escambo - endpoints",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "44032846",
+		"_collection_link": "https://rebs-5270805.postman.co/workspace/rebs's-Workspace~8f4ad76d-6e2e-4aba-8629-ce8937fc6b6e/collection/44032846-590cce84-8c3b-44c2-b216-399bfb22f6d1?action=share&source=collection_link&creator=44032846"
+	},
+	"item": [
+		{
+			"name": "Salvar/Editar Postagens",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"titulo\": \"Meu Segundo Post\",\r\n  \"descricao\": \"Descrição do post editada.\",\r\n  \"imagem_url\": \"https://exemplo.com/imagem.jpg\",\r\n  \"user_id\": \"5e443bf8-c309-4e68-a3fe-44d39549b7e6\",\r\n  \"titulo_categoria\": \"Roupas\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/postagens",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"postagens"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Salvar/Editar Usuário",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"nome\": \"Pablo\",\r\n  \"email\": \"pablo@example.com\",\r\n  \"senha\": \"senhaSegura1234\",\r\n  \"telefone\": \"(92) 99999-9999\",\r\n  \"whatsapp_link\": \"https://wa.me/5592999999\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/usuarios",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"usuarios"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Salvar/Editar Proposta",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"postagem_id\": \"26d4d5bb-4478-4aba-bf78-bb465c5d8581\",\r\n  \"remetente_id\": \"5e443bf8-c309-4e68-a3fe-44d39549b7e6\",\r\n  \"destinatario_id\": \"d05d2f10-036d-45b1-9586-fd2022622edc\",\r\n  \"status\": \"enviada\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/propostas",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"propostas"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Listar propostas",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/propostas?usuario_id={{usuario_id}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"propostas"
+					],
+					"query": [
+						{
+							"key": "usuario_id",
+							"value": "{{usuario_id}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Detalhes Post",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/postagens/{{postagem_id}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"postagens",
+						"{{postagem_id}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

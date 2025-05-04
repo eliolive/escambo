@@ -5,6 +5,7 @@ import (
 )
 
 type Post struct {
+	ID              string `json:"id"`
 	Titulo          string `json:"titulo"`
 	Descricao       string `json:"descricao"`
 	ImagemURL       string `json:"imagem_url"`
@@ -23,10 +24,6 @@ func (p *Post) Validate() error {
 
 	if p.ImagemURL == "" {
 		return errors.New("a URL da imagem é obrigatória")
-	}
-
-	if p.UserID == "" {
-		return errors.New("o ID do usuário é obrigatório")
 	}
 
 	if p.TituloCategoria == "" {
