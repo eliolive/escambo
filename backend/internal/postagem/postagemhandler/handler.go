@@ -1,25 +1,25 @@
-package posthandler
+package postagemhandler
 
 import (
 	"context"
 	"encoding/json"
-	"escambo/internal/postagem/postsvc"
+	"escambo/internal/postagem/postagemsvc"
 	"fmt"
 	"net/http"
 
 	"github.com/gorilla/mux"
 )
 
-type PostService interface {
-	GetPost(ctx context.Context, postID string) (postsvc.Post, error)
-	UpsavePost(ctx context.Context, post postsvc.Post) error
+type PostagemService interface {
+	GetPostagem(ctx context.Context, postID string) (postagemsvc.Postagem, error)
+	UpsavePostagem(ctx context.Context, post postagemsvc.Postagem) error
 }
 
 type Handler struct {
-	Service PostService
+	Service PostagemService
 }
 
-func NewHandler(service PostService) *Handler {
+func NewHandler(service PostagemService) *Handler {
 	return &Handler{Service: service}
 }
 
@@ -27,7 +27,7 @@ func (h *Handler) GetPost(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	postID := vars["id"]
 
-	post, err := h.Service.GetPost(r.Context(), postID)
+	post, err := h.Service.GetPostagem(r.Context(), postID)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("erro ao buscar postagem: %v", err), http.StatusInternalServerError)
 		return
@@ -43,14 +43,14 @@ func (h *Handler) GetPost(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) UpsavePost(w http.ResponseWriter, r *http.Request) {
-	var post postsvc.Post
+	var post postagemsvc.Postagem
 
 	if err := json.NewDecoder(r.Body).Decode(&post); err != nil {
 		http.Error(w, fmt.Sprintf("erro ao decodificar corpo da requisição: %v", err), http.StatusBadRequest)
 		return
 	}
 
-	if err := h.Service.UpsavePost(r.Context(), post); err != nil {
+	if err := h.Service.UpsavePostagem(r.Context(), post); err != nil {
 		http.Error(w, fmt.Sprintf("erro ao salvar postagem: %v", err), http.StatusInternalServerError)
 		return
 	}

@@ -1,4 +1,4 @@
-package postrepo
+package postagemrepo
 
 import (
 	"context"
@@ -15,7 +15,7 @@ func NewRepository(db *sql.DB) Repository {
 	}
 }
 
-func (r Repository) UpsavePost(ctx context.Context, post Post) error {
+func (r Repository) UpsavePostagem(ctx context.Context, post Post) error {
 	query := `
 		INSERT INTO postagens (id, titulo, descricao, imagem_url, user_id, categoria)
 		VALUES ($1, $2, $3, $4, $5, $6)
@@ -34,7 +34,7 @@ func (r Repository) UpsavePost(ctx context.Context, post Post) error {
 		post.Descricao,
 		post.ImagemURL,
 		post.UserID,
-		post.Catagoria,
+		post.Categoria,
 	)
 	if err != nil {
 		return err
@@ -43,7 +43,7 @@ func (r Repository) UpsavePost(ctx context.Context, post Post) error {
 	return nil
 }
 
-func (r Repository) GetPostByID(ctx context.Context, postID string) (Post, error) {
+func (r Repository) GetPostagemByID(ctx context.Context, postID string) (Post, error) {
 	query := `
 		SELECT 
 			id, 
@@ -99,4 +99,3 @@ func (r Repository) GetAllCategories(ctx context.Context) ([]string, error) {
 
 	return categorias, nil
 }
-

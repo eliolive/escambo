@@ -1,19 +1,19 @@
-package postsvc
+package postagemsvc
 
 import (
 	"errors"
 )
 
-type Post struct {
-	ID              string `json:"id"`
-	Titulo          string `json:"titulo"`
-	Descricao       string `json:"descricao"`
-	ImagemURL       string `json:"imagem_url"`
-	UserID          string `json:"user_id"`
-	Categoria       string `json:"categoria"`
+type Postagem struct {
+	ID        string `json:"id"`
+	Titulo    string `json:"titulo"`
+	Descricao string `json:"descricao"`
+	ImagemURL string `json:"imagem_url"`
+	UserID    string `json:"user_id"`
+	Categoria string `json:"categoria"`
 }
 
-func (p *Post) Validate() error {
+func (p *Postagem) Validate() error {
 	if p.Titulo == "" {
 		return errors.New("o título é obrigatório")
 	}
