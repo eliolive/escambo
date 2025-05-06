@@ -10,8 +10,7 @@ type Post struct {
 	Descricao       string    `json:"descricao"`
 	ImagemURL       string    `json:"imagem_url"`
 	UserID          string    `json:"user_id"`
-	CategoriaID     string    `json:"categoria_id"`
-	TituloCategoria string    `json:"categoria_titulo"`
+	Categoria       string    `json:"categoria"`
 	CreatedAt       time.Time `json:"created_at"`
 	UpdatedAt       time.Time `json:"updated_at"`
 }

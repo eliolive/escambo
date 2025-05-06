@@ -10,7 +10,7 @@ type Post struct {
 	Descricao       string `json:"descricao"`
 	ImagemURL       string `json:"imagem_url"`
 	UserID          string `json:"user_id"`
-	TituloCategoria string `json:"titulo_categoria"`
+	Categoria       string `json:"categoria"`
 }
 
 func (p *Post) Validate() error {
@@ -26,8 +26,8 @@ func (p *Post) Validate() error {
 		return errors.New("a URL da imagem é obrigatória")
 	}
 
-	if p.TituloCategoria == "" {
-		return errors.New("o nome da categoria é obrigatório")
+	if p.Categoria == "" {
+		return errors.New("a categoria é obrigatória")
 	}
 
 	return nil

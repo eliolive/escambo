@@ -17,7 +17,7 @@ func NewRepository(db *sql.DB) Repository {
 
 func (r Repository) UpsavePost(ctx context.Context, post Post) error {
 	query := `
-		INSERT INTO postagens (id, titulo, descricao, imagem_url, user_id, categoria_id)
+		INSERT INTO postagens (id, titulo, descricao, imagem_url, user_id, categoria)
 		VALUES ($1, $2, $3, $4, $5, $6)
 		ON CONFLICT (id)
 		DO UPDATE 
@@ -34,7 +34,7 @@ func (r Repository) UpsavePost(ctx context.Context, post Post) error {
 		post.Descricao,
 		post.ImagemURL,
 		post.UserID,
-		post.CategoriaID,
+		post.Catagoria,
 	)
 	if err != nil {
 		return err
@@ -46,17 +46,15 @@ func (r Repository) UpsavePost(ctx context.Context, post Post) error {
 func (r Repository) GetPostByID(ctx context.Context, postID string) (Post, error) {
 	query := `
 		SELECT 
-			p.id, 
-			p.titulo, 
-			p.descricao, 
-			p.imagem_url, 
-			p.user_id, 
-			p.created_at, 
-			p.updated_at,
-			c.id AS categoria_id,
-			c.titulo AS categoria_titulo
-		FROM postagens p
-		JOIN categorias c ON p.categoria_id = c.id
+			id, 
+			titulo, 
+			descricao, 
+			imagem_url, 
+			user_id, 
+			categoria,
+			created_at, 
+			updated_at
+		FROM postagens
 		WHERE p.id = $1;
 	`
 	var post Post
@@ -66,10 +64,9 @@ func (r Repository) GetPostByID(ctx context.Context, postID string) (Post, error
 		&post.Descricao,
 		&post.ImagemURL,
 		&post.UserID,
+		&post.Categoria,
 		&post.CreatedAt,
 		&post.UpdatedAt,
-		&post.CategoriaID,
-		&post.TituloCategoria,
 	)
 	if err != nil {
 		return Post{}, err
@@ -77,3 +74,29 @@ func (r Repository) GetPostByID(ctx context.Context, postID string) (Post, error
 
 	return post, nil
 }
+
+func (r Repository) GetAllCategories(ctx context.Context) ([]string, error) {
+	query := `SELECT DISTINCT categoria FROM postagem`
+
+	rows, err := r.DB.QueryContext(ctx, query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var categorias []string
+	for rows.Next() {
+		var categoria string
+		if err := rows.Scan(&categoria); err != nil {
+			return nil, err
+		}
+		categorias = append(categorias, categoria)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return categorias, nil
+}
+

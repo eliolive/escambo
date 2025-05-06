@@ -9,26 +9,18 @@ CREATE TABLE usuarios (
   updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-
-CREATE TABLE categorias(
-    id UUID NOT NULL PRIMARY KEY,
-    titulo VARCHAR(100) not null
-);
-
 CREATE TABLE postagens (
   id UUID NOT NULL PRIMARY KEY,
   titulo VARCHAR(150) NOT NULL,
   descricao TEXT NOT NULL,
   imagem_url VARCHAR(255) NOT NULL,
   user_id UUID NOT NULL,
-  categoria_id UUID NOT NULL,
+  categoria VARCHAR(150) NOT NULL,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT fk_postagens_usuarios
     FOREIGN KEY (user_id) REFERENCES usuarios(id)
-    ON DELETE CASCADE,
-  CONSTRAINT fk_postagens_categorias
-    FOREIGN KEY (categoria_id) REFERENCES categorias(id) ON DELETE SET NULL
+    ON DELETE CASCADE
 );
 
 CREATE TABLE endereco (
