@@ -1,17 +1,39 @@
 package propostarepo
 
-import "errors"
+import (
+	"errors"
+	"time"
+)
 
-type Proposta struct {
-	ID             string `json:"id"`
-	PostagemID     string `json:"postagem_id"`
-	RemetenteID    string `json:"remetente_id"`
-	DestinatarioID string `json:"destinatario_id"`
-	Status         string `json:"status"`
-	Excluida       bool   `json:"excluida"`
+type PropostaReadModel struct {
+	ID             string    `json:"id"`
+	PostagemID     string    `json:"postagem_id"`
+	InteressadoID  string    `json:"interessado_id"`
+	DonoPostagemID string    `json:"dono_postagem_id"`
+	Status         string    `json:"status"`
+	ImagemURL      string    `json:"imagem_url"`
+	Descricao      string    `json:"descricao"`
+	CreatedAt      time.Time `json:"created_at"`
+	ExpiresAt      time.Time `json:"expires_at"`
 }
 
-func (p Proposta) Validate() error {
+type PropostaWriteModel struct {
+	PostagemID     string `json:"postagem_id"`
+	RemetenteID    string `json:"interessado_id"`
+	DestinatarioID string `json:"dono_postagem_id"`
+	Status         string `json:"status"`
+	ImagemURL      string `json:"imagem_url"`
+	Descricao      string `json:"descricao"`
+}
+
+type PropostasQueryFilter struct {
+	UsuarioID string
+	Status    *string
+	FromTS    *time.Time
+	ToTS      *time.Time
+}
+
+func (p PropostaWriteModel) Validate() error {
 	if p.RemetenteID == "" {
 		return errors.New("remetenteID é obrigatório")
 	}

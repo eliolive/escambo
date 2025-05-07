@@ -5,7 +5,6 @@ import (
 	"escambo/internal/usuario/usuariorepo"
 	"fmt"
 
-	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -18,10 +17,6 @@ func NewService(repository usuariorepo.Repository) *Service {
 }
 
 func (s *Service) UpsertUsuario(ctx context.Context, usuario usuariorepo.Usuario) error {
-	if usuario.ID == "" {
-		usuario.ID = uuid.New().String()
-	}
-
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(usuario.Senha), bcrypt.DefaultCost)
 	if err != nil {
 		return fmt.Errorf("erro ao gerar hash da senha: %w", err)

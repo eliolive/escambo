@@ -2,10 +2,9 @@ package main
 
 import (
 	"database/sql"
-	"escambo/internal/categoria/categoriarepo"
-	"escambo/internal/postagem/posthandler"
-	"escambo/internal/postagem/postrepo"
-	"escambo/internal/postagem/postsvc"
+	"escambo/internal/postagem/postagemhandler"
+	"escambo/internal/postagem/postagemrepo"
+	"escambo/internal/postagem/postagemsvc"
 	"escambo/internal/proposta/propostahandler"
 	"escambo/internal/proposta/propostarepo"
 	"escambo/internal/proposta/propostasvc"
@@ -40,10 +39,9 @@ func main() {
 		log.Panic("Ping DB", err)
 	}
 
-	postRepo := postrepo.NewRepository(db)
-	categoriaRepo := categoriarepo.NewRepository(db)
-	postService := postsvc.NewService(postRepo, categoriaRepo)
-	postHandler := posthandler.NewHandler(postService)
+	postRepo := postagemrepo.NewRepository(db)
+	postService := postagemsvc.NewService(postRepo)
+	postHandler := postagemhandler.NewHandler(postService)
 
 	r := mux.NewRouter()
 	r.HandleFunc("/postagens/{id}", postHandler.GetPost).Methods("GET")
@@ -60,7 +58,7 @@ func main() {
 	propostaHandler := propostahandler.NewHandler(&propostaService)
 
 	r.HandleFunc("/propostas", propostaHandler.UpsaveProposta).Methods("PUT")
-	r.HandleFunc("/propostas", propostaHandler.GetPropostasByID).Methods("GET")
+	r.HandleFunc("/propostas", propostaHandler.GetPropostas).Methods("GET")
 
 	log.Println("Servidor rodando na porta 8080...")
 	log.Fatal(http.ListenAndServe(":8080", r))

@@ -17,8 +17,8 @@ func NewRepository(db *sql.DB) Repository {
 
 func (r Repository) UpsertUsuario(ctx context.Context, usuario Usuario) error {
 	query := `
-	INSERT INTO usuarios (id, nome, email, senha, telefone, whatsapp_link)
-	VALUES ($1, $2, $3, $4, $5, $6)
+	INSERT INTO usuarios (nome, email, senha, telefone, whatsapp_link)
+	VALUES ($1, $2, $3, $4, $5)
 	ON CONFLICT (id)
 	DO UPDATE 
 	SET nome = EXCLUDED.nome, 
@@ -29,7 +29,7 @@ func (r Repository) UpsertUsuario(ctx context.Context, usuario Usuario) error {
 		updated_at = NOW();
 	`
 
-	_, err := r.DB.ExecContext(ctx, query, usuario.ID, usuario.Nome, usuario.Email, string(usuario.Senha), usuario.Telefone, usuario.WhatsappLink)
+	_, err := r.DB.ExecContext(ctx, query, usuario.Nome, usuario.Email, string(usuario.Senha), usuario.Telefone, usuario.WhatsappLink)
 	if err != nil {
 		return err
 	}

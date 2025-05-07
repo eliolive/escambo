@@ -3,13 +3,11 @@ package propostasvc
 import (
 	"context"
 	"escambo/internal/proposta/propostarepo"
-
-	"github.com/google/uuid"
 )
 
 type PropostaRepository interface {
-	UpsaveProposta(ctx context.Context, proposta propostarepo.Proposta) error
-	GetPropostasByID(ctx context.Context, usuarioID string) ([]propostarepo.Proposta, error)
+	UpsaveProposta(ctx context.Context, proposta propostarepo.PropostaWriteModel) error
+	GetPropostas(ctx context.Context, filter propostarepo.PropostasQueryFilter) ([]propostarepo.PropostaReadModel, error)
 }
 
 type Service struct {
@@ -22,15 +20,16 @@ func NewService(repo PropostaRepository) Service {
 	}
 }
 
-func (s *Service) GetPropostasByID(ctx context.Context, usuarioID string) ([]propostarepo.Proposta, error) {
-	return s.repo.GetPropostasByID(ctx, usuarioID)
+func (s *Service) GetPropostas(ctx context.Context, filter PropostasFilter) ([]propostarepo.PropostaReadModel, error) {
+	return s.repo.GetPropostas(ctx, propostarepo.PropostasQueryFilter{
+		UsuarioID: filter.UsuarioID,
+		Status:    filter.Status,
+		FromTS:    filter.FromTS,
+		ToTS:      filter.ToTS,
+	})
 }
 
-func (s *Service) UpsaveProposta(ctx context.Context, proposta propostarepo.Proposta) error {
-	if proposta.ID == "" {
-		proposta.ID = uuid.New().String()
-	}
-
+func (s *Service) UpsaveProposta(ctx context.Context, proposta propostarepo.PropostaWriteModel) error {
 	if err := proposta.Validate(); err != nil {
 		return err
 	}

@@ -3,6 +3,8 @@ package propostarepo
 import (
 	"context"
 	"database/sql"
+	"fmt"
+	"strings"
 )
 
 type Repository struct {
@@ -15,59 +17,85 @@ func NewRepository(db *sql.DB) Repository {
 	}
 }
 
-func (r Repository) UpsaveProposta(ctx context.Context, proposta Proposta) error {
+func (r Repository) UpsaveProposta(ctx context.Context, proposta PropostaWriteModel) error {
 	query := `
 		INSERT INTO propostas (
-			id, postagem_id, remetente_id, destinatario_id, status, excluida
+			postagem_id, interessado_id, dono_postagem_id, status, imagem_url, descricao
 		) VALUES (
 			$1, $2, $3, $4, $5, $6
 		)
 		ON CONFLICT (id) DO UPDATE SET
-			status = EXCLUDED.status,
-			excluida = EXCLUDED.excluida;
+			status = EXCLUDED.status;
 	`
 
 	_, err := r.DB.ExecContext(ctx, query,
-		proposta.ID,
 		proposta.PostagemID,
 		proposta.RemetenteID,
 		proposta.DestinatarioID,
 		proposta.Status,
-		proposta.Excluida,
+		proposta.ImagemURL,
+		proposta.Descricao,
 	)
 
 	return err
 }
 
-func (r Repository) GetPropostasByID(ctx context.Context, usuarioID string) ([]Proposta, error) {
+func (r Repository) GetPropostas(ctx context.Context, filter PropostasQueryFilter) ([]PropostaReadModel, error) {
 	query := `
-		SELECT id, postagem_id, remetente_id, destinatario_id, status, excluida 
+		SELECT id, postagem_id, interessado_id, dono_postagem_id, status,
+		       imagem_url, descricao, created_at, expires_at
 		FROM propostas 
-		WHERE remetente_id = $1
+		WHERE dono_postagem_id = $1
 	`
+	args := []interface{}{filter.UsuarioID}
+	conditions := []string{}
 
-	rows, err := r.DB.QueryContext(ctx, query, usuarioID)
+	conditions = append(conditions, "dono_postagem_id = $1")
+	argPos := 2
+
+	if filter.Status != nil {
+		conditions = append(conditions, fmt.Sprintf("status = $%d", argPos))
+		args = append(args, *filter.Status)
+		argPos++
+	}
+
+	if filter.FromTS != nil {
+		conditions = append(conditions, fmt.Sprintf("created_at >= $%d", argPos))
+		args = append(args, *filter.FromTS)
+		argPos++
+	}
+
+	if filter.ToTS != nil {
+		conditions = append(conditions, fmt.Sprintf("created_at <= $%d", argPos))
+		args = append(args, *filter.ToTS)
+		argPos++
+	}
+
+	query += " AND " + strings.Join(conditions, " AND ")
+
+	rows, err := r.DB.QueryContext(ctx, query, args...)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
-	var propostas []Proposta
+	var propostas []PropostaReadModel
 	for rows.Next() {
-		var proposta Proposta
-
+		var proposta PropostaReadModel
 		err := rows.Scan(
 			&proposta.ID,
 			&proposta.PostagemID,
-			&proposta.RemetenteID,
-			&proposta.DestinatarioID,
+			&proposta.InteressadoID,
+			&proposta.DonoPostagemID,
 			&proposta.Status,
-			&proposta.Excluida,
+			&proposta.ImagemURL,
+			&proposta.Descricao,
+			&proposta.CreatedAt,
+			&proposta.ExpiresAt,
 		)
 		if err != nil {
 			return nil, err
 		}
-
 		propostas = append(propostas, proposta)
 	}
 

@@ -1,5 +1,7 @@
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
 CREATE TABLE usuarios (
-  id UUID NOT NULL PRIMARY KEY,
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   nome VARCHAR(150) NOT NULL,
   email VARCHAR(150) NOT NULL,
   senha VARCHAR(100) NOT NULL,
@@ -10,7 +12,7 @@ CREATE TABLE usuarios (
 );
 
 CREATE TABLE postagens (
-  id UUID NOT NULL PRIMARY KEY,
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   titulo VARCHAR(150) NOT NULL,
   descricao TEXT NOT NULL,
   imagem_url VARCHAR(255) NOT NULL,
@@ -24,7 +26,7 @@ CREATE TABLE postagens (
 );
 
 CREATE TABLE endereco (
-   id UUID NOT NULL PRIMARY KEY,
+   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
    cep VARCHAR(15) NOT NULL,
    rua VARCHAR(255) NOT NULL,
    numero INT NOT NULL,
@@ -37,19 +39,26 @@ CREATE TABLE endereco (
      FOREIGN KEY (user_id) REFERENCES usuarios(id)
      ON DELETE CASCADE
 );
-CREATE TABLE propostas (
-    id UUID PRIMARY KEY,
-    postagem_id UUID NOT NULL,
-    remetente_id UUID NOT NULL,         -- quem faz a proposta
-    destinatario_id UUID NOT NULL,      -- quem recebe a proposta
-    status VARCHAR(20) NOT NULL DEFAULT 'pendente',  -- pendente, aceita, recusada
-    excluida BOOLEAN DEFAULT FALSE,
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT fk_proposta_postagem
-        FOREIGN KEY (postagem_id) REFERENCES postagens(id),
-    CONSTRAINT fk_proposta_remetente
-        FOREIGN KEY (remetente_id) REFERENCES usuarios(id),
-    CONSTRAINT fk_proposta_destinatario
-        FOREIGN KEY (destinatario_id) REFERENCES usuarios(id)
+CREATE TABLE propostas (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    
+    postagem_id UUID NOT NULL,
+    interessado_id UUID NOT NULL,       -- Usuário que faz a proposta
+    dono_postagem_id UUID NOT NULL,    -- Usuário que recebe a proposta
+
+    status VARCHAR(20) NOT NULL DEFAULT 'pendente' CHECK (status IN ('pendente', 'aceita', 'recusada')),
+
+    imagem_url TEXT,
+    descricao TEXT,
+
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    expires_at TIMESTAMP NOT NULL DEFAULT (CURRENT_TIMESTAMP + interval '7 days'),
+
+    CONSTRAINT fk_propostas_postagem
+        FOREIGN KEY (postagem_id) REFERENCES postagens(id) ON DELETE CASCADE,
+    CONSTRAINT fk_propostas_remetente
+        FOREIGN KEY (interessado_id) REFERENCES usuarios(id) ON DELETE CASCADE,
+    CONSTRAINT fk_propostas_destinatario
+        FOREIGN KEY (dono_postagem_id) REFERENCES usuarios(id) ON DELETE CASCADE
 );

@@ -57,9 +57,5 @@ func (h *Handler) UpsavePost(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-
-	if err := json.NewEncoder(w).Encode(map[string]string{"status": "sucesso"}); err != nil {
-		http.Error(w, fmt.Sprintf("erro ao codificar resposta em JSON: %v", err), http.StatusInternalServerError)
-		return
-	}
+	w.Write([]byte("Usuário inserido/atualizado com sucesso"))
 }

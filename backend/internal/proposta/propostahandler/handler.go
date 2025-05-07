@@ -3,13 +3,16 @@ package propostahandler
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"escambo/internal/proposta/propostarepo"
+	"escambo/internal/proposta/propostasvc"
 	"net/http"
+	"time"
 )
 
 type PropostaSvc interface {
-	GetPropostasByID(ctx context.Context, usuarioID string) ([]propostarepo.Proposta, error)
-	UpsaveProposta(ctx context.Context, proposta propostarepo.Proposta) error
+	GetPropostas(ctx context.Context, filter propostasvc.PropostasFilter) ([]propostarepo.PropostaReadModel, error)
+	UpsaveProposta(ctx context.Context, proposta propostarepo.PropostaWriteModel) error
 }
 
 type Handler struct {
@@ -20,14 +23,19 @@ func NewHandler(svc PropostaSvc) *Handler {
 	return &Handler{svc: svc}
 }
 
-func (h *Handler) GetPropostasByID(w http.ResponseWriter, r *http.Request) {
-	usuarioID := r.URL.Query().Get("usuario_id")
-	if usuarioID == "" {
-		http.Error(w, "usuario_id é obrigatório", http.StatusBadRequest)
+func (h *Handler) GetPropostas(w http.ResponseWriter, r *http.Request) {
+	params, err := getParams(r)
+	if err != nil {
+		http.Error(w, "parametros invalidos: "+err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	propostas, err := h.svc.GetPropostasByID(r.Context(), usuarioID)
+	propostas, err := h.svc.GetPropostas(r.Context(), propostasvc.PropostasFilter{
+		UsuarioID: params.UsuarioID,
+		FromTS:    params.FromTS,
+		ToTS:      params.ToTS,
+		Status:    params.Status,
+	})
 	if err != nil {
 		http.Error(w, "erro ao buscar propostas: "+err.Error(), http.StatusInternalServerError)
 		return
@@ -40,10 +48,10 @@ func (h *Handler) GetPropostasByID(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) UpsaveProposta(w http.ResponseWriter, r *http.Request) {
-	var proposta propostarepo.Proposta
+	var proposta propostarepo.PropostaWriteModel
 
 	if err := json.NewDecoder(r.Body).Decode(&proposta); err != nil {
-		http.Error(w, "corpo inválido: "+err.Error(), http.StatusBadRequest)
+		http.Error(w, "body inválido: "+err.Error(), http.StatusBadRequest)
 		return
 	}
 
@@ -53,4 +61,43 @@ func (h *Handler) UpsaveProposta(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusNoContent)
+}
+
+func getParams(r *http.Request) (GetPropostasParams, error) {
+	usuarioID := r.URL.Query().Get("usuario_id")
+	if usuarioID == "" {
+		return GetPropostasParams{}, errors.New("usuario_id é obrigatório")
+	}
+
+	fromTS := r.URL.Query().Get("from_ts")
+	var parsedFromTS *time.Time
+	if fromTS != "" {
+		parsedTime, err := time.Parse(time.RFC3339, fromTS)
+		if err != nil {
+			return GetPropostasParams{}, errors.New("formato de data 'from_ts' inválido")
+		}
+		parsedFromTS = &parsedTime
+	}
+
+	toTS := r.URL.Query().Get("to_ts")
+	var parsedToTS *time.Time
+	if toTS != "" {
+		parsedTime, err := time.Parse(time.RFC3339, toTS)
+		if err != nil {
+			return GetPropostasParams{}, errors.New("formato de data 'to_ts' inválido")
+		}
+		parsedToTS = &parsedTime
+	}
+
+	status := r.URL.Query().Get("status")
+	if status != "" && status != "pendente" && status != "aceita" && status != "recusada" {
+		return GetPropostasParams{}, errors.New("status inválido. Valores válidos: 'pendente', 'aceita', 'recusada'")
+	}
+
+	return GetPropostasParams{
+		UsuarioID: usuarioID,
+		Status:    &status,
+		FromTS:    parsedFromTS,
+		ToTS:      parsedToTS,
+	}, nil
 }
