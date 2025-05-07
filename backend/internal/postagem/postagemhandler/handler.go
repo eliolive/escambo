@@ -57,5 +57,5 @@ func (h *Handler) UpsavePost(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("Usuário inserido/atualizado com sucesso"))
+	w.Write([]byte("Postagem inserida/atualizada com sucesso"))
 }

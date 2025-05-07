@@ -3,8 +3,6 @@ package propostarepo
 import (
 	"context"
 	"database/sql"
-	"fmt"
-	"strings"
 )
 
 type Repository struct {
@@ -47,33 +45,7 @@ func (r Repository) GetPropostas(ctx context.Context, filter PropostasQueryFilte
 		FROM propostas 
 		WHERE dono_postagem_id = $1
 	`
-	args := []interface{}{filter.UsuarioID}
-	conditions := []string{}
-
-	conditions = append(conditions, "dono_postagem_id = $1")
-	argPos := 2
-
-	if filter.Status != nil {
-		conditions = append(conditions, fmt.Sprintf("status = $%d", argPos))
-		args = append(args, *filter.Status)
-		argPos++
-	}
-
-	if filter.FromTS != nil {
-		conditions = append(conditions, fmt.Sprintf("created_at >= $%d", argPos))
-		args = append(args, *filter.FromTS)
-		argPos++
-	}
-
-	if filter.ToTS != nil {
-		conditions = append(conditions, fmt.Sprintf("created_at <= $%d", argPos))
-		args = append(args, *filter.ToTS)
-		argPos++
-	}
-
-	query += " AND " + strings.Join(conditions, " AND ")
-
-	rows, err := r.DB.QueryContext(ctx, query, args...)
+	rows, err := r.DB.QueryContext(ctx, query, filter.UsuarioID)
 	if err != nil {
 		return nil, err
 	}
