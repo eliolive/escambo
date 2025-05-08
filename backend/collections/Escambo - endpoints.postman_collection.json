@@ -17,7 +17,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"titulo\": \"Meu Segundo Post\",\r\n  \"descricao\": \"Descrição do post editada.\",\r\n  \"imagem_url\": \"https://exemplo.com/imagem.jpg\",\r\n  \"user_id\": \"5e443bf8-c309-4e68-a3fe-44d39549b7e6\",\r\n  \"titulo_categoria\": \"Roupas\"\r\n}\r\n",
+					"raw": "{\r\n  \"titulo\": \"Cocaina - 20kg\",\r\n  \"descricao\": \"A venda\",\r\n  \"imagem_url\": \"https://exemplo.com/imagem.jpg\",\r\n  \"user_id\": \"ab47d555-f740-41d4-9c50-b5eb9725e434\",\r\n  \"categoria\": \"Drogas\"\r\n}\r\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -73,7 +73,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"postagem_id\": \"26d4d5bb-4478-4aba-bf78-bb465c5d8581\",\r\n  \"interessado_id\": \"5e443bf8-c309-4e68-a3fe-44d39549b7e6\",\r\n  \"dono_postagem_id\": \"d05d2f10-036d-45b1-9586-fd2022622edc\",\r\n  \"status\": \"enviada\"\r\n}\r\n",
+					"raw": "{\r\n  \"postagem_id\": \"26d4d5bb-4478-4aba-bf78-bb465c5d8581\",\r\n  \"remetente_id\": \"5e443bf8-c309-4e68-a3fe-44d39549b7e6\",\r\n  \"destinatario_id\": \"d05d2f10-036d-45b1-9586-fd2022622edc\",\r\n  \"status\": \"enviada\"\r\n}\r\n",
 					"options": {
 						"raw": {
 							"language": "json"
