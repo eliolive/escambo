@@ -16,6 +16,7 @@ import (
 	"os"
 
 	_ "github.com/lib/pq"
+	"github.com/rs/cors"
 
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
@@ -60,6 +61,17 @@ func main() {
 	r.HandleFunc("/propostas", propostaHandler.UpsaveProposta).Methods("PUT")
 	r.HandleFunc("/propostas", propostaHandler.GetPropostas).Methods("GET")
 
-	log.Println("Servidor rodando na porta 8080...")
-	log.Fatal(http.ListenAndServe(":8080", r))
+	corsHandler := cors.New(cors.Options{AllowedOrigins: []string{"*"},
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedHeaders:   []string{"Authorization", "Content-Type"},
+		AllowCredentials: true,
+	}).Handler(r)
+
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+	log.Println("Servidor rodando na porta " + port + "...")
+	log.Fatal(http.ListenAndServe(":"+port, corsHandler))
+
 }

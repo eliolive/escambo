@@ -31,5 +31,5 @@ make migrate-create name=your_migration_name
 - Substitua DATABASE_URL pela URL do banco presente no .env.example
 
 ```bash
-migrate -path=internal/database/migrations -database DATABASE_URL -verbose up
+migrate -path=database/migrations -database DATABASE_URL -verbose up
 ```
