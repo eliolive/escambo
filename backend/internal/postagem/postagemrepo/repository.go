@@ -36,7 +36,6 @@ func (r Repository) InsertPostagem(ctx context.Context, post Post) error {
 func (r Repository) GetPostagemByID(ctx context.Context, postID string) (Post, error) {
 	query := `
 		SELECT 
-			id, 
 			titulo, 
 			descricao, 
 			imagem_base64, 
@@ -45,11 +44,10 @@ func (r Repository) GetPostagemByID(ctx context.Context, postID string) (Post, e
 			created_at, 
 			updated_at
 		FROM postagens
-		WHERE p.id = $1;
+		WHERE id = $1;
 	`
 	var post Post
 	err := r.DB.QueryRowContext(ctx, query, postID).Scan(
-		&post.ID,
 		&post.Titulo,
 		&post.Descricao,
 		&post.ImagemBase64,

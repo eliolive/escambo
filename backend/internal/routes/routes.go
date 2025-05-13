@@ -12,6 +12,10 @@ import (
 	"escambo/internal/usuario/usuariorepo"
 	"escambo/internal/usuario/usuariosvc"
 
+	_ "escambo/docs"
+
+	httpSwagger "github.com/swaggo/http-swagger"
+
 	"github.com/gorilla/mux"
 )
 
@@ -20,7 +24,7 @@ func RegisterRoutes(r *mux.Router, db *sql.DB) {
 	postService := postagemsvc.NewService(postRepo)
 	postHandler := postagemhandler.NewHandler(postService)
 
-	r.HandleFunc("/postagens/{id}", postHandler.GetPost).Methods("GET")
+	r.HandleFunc("/postagens/{id}", postHandler.GetDetalhesPostagem).Methods("GET")
 	r.HandleFunc("/postagens", postHandler.InsertPostagem).Methods("POST")
 
 	userRepo := usuariorepo.NewRepository(db)
@@ -36,4 +40,7 @@ func RegisterRoutes(r *mux.Router, db *sql.DB) {
 
 	r.HandleFunc("/trocas", propostaHandler.InsertProposta).Methods("POST")
 	r.HandleFunc("/trocas/{id}", propostaHandler.GetPropostas).Methods("GET")
+
+	r.PathPrefix("/swagger/").Handler(httpSwagger.WrapHandler)
+
 }

@@ -1,0 +1,259 @@
+definitions:
+  postagemsvc.Postagem:
+    properties:
+      categoria:
+        type: string
+      descricao:
+        type: string
+      imagem_base64:
+        type: string
+      titulo:
+        type: string
+      user_id:
+        type: string
+    type: object
+  propostarepo.Produto:
+    properties:
+      categoria:
+        type: string
+      descricao:
+        type: string
+      imagem:
+        type: string
+      nome:
+        type: string
+      usuario:
+        type: string
+    type: object
+  propostarepo.PropostaFormatada:
+    properties:
+      produto_postagem:
+        $ref: '#/definitions/propostarepo.Produto'
+      produto_proposta_troca:
+        $ref: '#/definitions/propostarepo.Produto'
+      status:
+        type: string
+    type: object
+  propostarepo.PropostaWriteModel:
+    properties:
+      categoria:
+        type: string
+      descricao:
+        type: string
+      dono_postagem_id:
+        type: string
+      imagem_base64:
+        type: string
+      interessado_id:
+        type: string
+      nome:
+        type: string
+      postagem_id:
+        type: string
+    type: object
+  usuariorepo.Usuario:
+    properties:
+      email:
+        type: string
+      id:
+        type: string
+      nome:
+        type: string
+      senha:
+        type: string
+      telefone:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /postagens:
+    post:
+      consumes:
+      - application/json
+      description: Cria uma nova postagem no sistema com os dados fornecidos no corpo
+        da requisição
+      parameters:
+      - description: Dados da postagem a ser inserida
+        in: body
+        name: postagem
+        required: true
+        schema:
+          $ref: '#/definitions/postagemsvc.Postagem'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Postagem inserida com sucesso
+          schema:
+            type: string
+        "400":
+          description: Erro ao decodificar corpo da requisição
+          schema:
+            type: string
+        "500":
+          description: Erro ao salvar postagem
+          schema:
+            type: string
+      summary: Insere uma nova postagem
+      tags:
+      - postagens
+  /postagens/{id}/detalhes:
+    get:
+      consumes:
+      - application/json
+      description: Retorna todas as informações de uma postagem com base no ID fornecido.
+      parameters:
+      - description: ID da Postagem
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/postagemsvc.Postagem'
+        "500":
+          description: Erro interno ao buscar a postagem ou ao codificar a resposta
+          schema:
+            type: string
+      summary: Buscar detalhes da postagem
+      tags:
+      - postagens
+  /propostas:
+    post:
+      consumes:
+      - application/json
+      description: Registra uma proposta de troca com base nos dados enviados
+      parameters:
+      - description: Dados da proposta
+        in: body
+        name: proposta
+        required: true
+        schema:
+          $ref: '#/definitions/propostarepo.PropostaWriteModel'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: created
+          schema:
+            type: string
+        "400":
+          description: body inválido
+          schema:
+            type: string
+        "500":
+          description: erro ao salvar proposta
+          schema:
+            type: string
+      summary: Cadastra nova proposta
+      tags:
+      - propostas
+  /propostas/{id}:
+    get:
+      description: Retorna propostas enviadas ou recebidas por um usuário com base
+        no tipo e status
+      parameters:
+      - description: ID do usuário
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Tipo de proposta (enviadas ou recebidas)
+        in: query
+        name: tipo
+        required: true
+        type: string
+      - description: Status da proposta (pendente, aceita, recusada)
+        in: query
+        name: status
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              items:
+                $ref: '#/definitions/propostarepo.PropostaFormatada'
+              type: array
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Lista propostas do usuário
+      tags:
+      - propostas
+  /usuarios:
+    post:
+      consumes:
+      - application/json
+      description: Insere um usuário no sistema com base nos dados fornecidos no corpo
+        da requisição
+      parameters:
+      - description: Dados do novo usuário
+        in: body
+        name: usuario
+        required: true
+        schema:
+          $ref: '#/definitions/usuariorepo.Usuario'
+      produces:
+      - text/plain
+      responses:
+        "201":
+          description: Usuário inserido com sucesso
+          schema:
+            type: string
+        "400":
+          description: Erro ao decodificar corpo da requisição
+          schema:
+            type: string
+        "500":
+          description: Erro interno do servidor
+          schema:
+            type: string
+      summary: Cadastra um novo usuário
+      tags:
+      - usuarios
+  /usuarios/{id}:
+    put:
+      consumes:
+      - application/json
+      description: Atualiza as informações de um usuário identificado pelo ID
+      parameters:
+      - description: ID do usuário
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Dados atualizados do usuário
+        in: body
+        name: usuario
+        required: true
+        schema:
+          $ref: '#/definitions/usuariorepo.Usuario'
+      produces:
+      - text/plain
+      responses:
+        "204":
+          description: No Content
+          schema:
+            type: string
+        "400":
+          description: Erro ao decodificar corpo da requisição
+          schema:
+            type: string
+        "500":
+          description: Erro interno do servidor
+          schema:
+            type: string
+      summary: Atualiza dados de um usuário
+      tags:
+      - usuarios
+swagger: "2.0"

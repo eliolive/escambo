@@ -8,44 +8,13 @@
 	},
 	"item": [
 		{
-			"name": "Salvar/Editar Postagens",
+			"name": "Salvar Usuário",
 			"request": {
-				"auth": {
-					"type": "noauth"
-				},
-				"method": "PUT",
+				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"titulo\": \"Cafe - 20kg\",\r\n  \"descricao\": \"A venda\",\r\n  \"imagem_url\": \"https://exemplo.com/imagem.jpg\",\r\n  \"user_id\": \"ab47d555-f740-41d4-9c50-b5eb9725e434\",\r\n  \"categoria\": \"Alimentos\"\r\n}\r\n",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:8080/postagens",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"postagens"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Salvar/Editar Usuário",
-			"request": {
-				"method": "PUT",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n  \"nome\": \"Pablo\",\r\n  \"email\": \"pablo@example.com\",\r\n  \"senha\": \"senhaSegura1234\",\r\n  \"telefone\": \"(92) 99999-9999\",\r\n  \"whatsapp_link\": \"https://wa.me/5592999999\"\r\n}\r\n",
+					"raw": "{\r\n  \"nome\": \"Padre da Silva Pedrosa\",\r\n  \"email\": \"padre@example.com\",\r\n  \"senha\": \"senhaSegura1234\",\r\n  \"telefone\": \"(92) 88888-9999\"\r\n}\r\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -67,13 +36,40 @@
 			"response": []
 		},
 		{
-			"name": "Salvar/Editar Proposta",
+			"name": "Update Usuario",
 			"request": {
 				"method": "PUT",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"postagem_id\": \"26d4d5bb-4478-4aba-bf78-bb465c5d8581\",\r\n  \"remetente_id\": \"5e443bf8-c309-4e68-a3fe-44d39549b7e6\",\r\n  \"destinatario_id\": \"d05d2f10-036d-45b1-9586-fd2022622edc\",\r\n  \"status\": \"enviada\"\r\n}\r\n",
+					"raw": "{\r\n  \"nome\": \" da Silva Pedrosa\",\r\n  \"email\": \"joaozinho@exampla.com\",\r\n  \"senha\": \"senhaSegura1234\",\r\n  \"telefone\": \"(92) 88888-9991\",\r\n  \"whatsapp_link\": \"https://wa.me/5592999999\"\r\n}\r\n"
+				},
+				"url": {
+					"raw": "http://localhost:8080/usuarios/{{usuario_id}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"usuarios",
+						"{{usuario_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Salvar Postagem",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"id\": \"140382f9-ef85-469e-874d-02fda117f687\",\r\n  \"titulo\": \"Troca de livro interessante\",\r\n  \"descricao\": \"Tenho interesse em trocar por outro livro da mesma série.\",\r\n  \"imagem_base64\": \"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUA... (imagem codificada em Base64)\",\r\n  \"user_id\": \"140382f9-ef85-469e-874d-02fda117f687\",\r\n  \"categoria\": \"Livros\"\r\n}\r\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -81,65 +77,111 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/propostas",
+					"raw": "http://localhost:8080/postagens",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"propostas"
+						"postagens"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "Listar propostas",
+			"name": "Detalhes Postagem",
 			"request": {
 				"auth": {
 					"type": "noauth"
 				},
-				"method": "GET",
+				"method": "POST",
 				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"id\": \"140382f9-ef85-469e-874d-02fda117f687\",\r\n  \"titulo\": \"Troca de livro interessante\",\r\n  \"descricao\": \"Tenho interesse em trocar por outro livro da mesma série.\",\r\n  \"imagem_base64\": \"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUA... (imagem codificada em Base64)\",\r\n  \"user_id\": \"140382f9-ef85-469e-874d-02fda117f687\",\r\n  \"categoria\": \"Livros\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
-					"raw": "http://localhost:8080/propostas?usuario_id={{usuario_id}}",
+					"raw": "http://localhost:8080/postagens",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"propostas"
+						"postagens"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Salvar Troca",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"postagem_id\": \"60c5b3f2-213e-4d18-a2fd-c51b2fe1fa0b\",\r\n  \"dono_postagem_id\": \"140382f9-ef85-469e-874d-02fda117f687\",\r\n  \"interessado_id\": \"b4d9c0d5-d365-4df9-b87f-c3dcc27f7116\",\r\n  \"imagem_base64\": \"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUA...\",  \r\n  \"nome\": \"Fogãozinho\",\r\n  \"categoria\": \"Eletrodomésticos\",\r\n  \"descricao\": \"Tenho interesse em trocar por outro livro da mesma coleção. Posso entregar amanhã.\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/trocas",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"trocas"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Histórico de Trocas",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/trocas/140382f9-ef85-469e-874d-02fda117f687?tipo=recebidas",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"trocas",
+						"140382f9-ef85-469e-874d-02fda117f687"
 					],
 					"query": [
 						{
-							"key": "usuario_id",
-							"value": "{{usuario_id}}"
+							"key": "tipo",
+							"value": "recebidas"
 						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Detalhes Post",
-			"request": {
-				"auth": {
-					"type": "noauth"
-				},
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:8080/postagens/{{postagem_id}}",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"postagens",
-						"{{postagem_id}}"
 					]
 				}
 			},

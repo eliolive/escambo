@@ -41,14 +41,13 @@ func (s Service) InsertPostagem(ctx context.Context, post Postagem) error {
 	return nil
 }
 
-func (s Service) GetPostagem(ctx context.Context, postagemID string) (Postagem, error) {
+func (s Service) GetDetalhesPostagem(ctx context.Context, postagemID string) (Postagem, error) {
 	postagem, err := s.PostagemRepo.GetPostagemByID(ctx, postagemID)
 	if err != nil {
 		return Postagem{}, err
 	}
 
 	return Postagem{
-		ID:           postagem.ID,
 		Titulo:       postagem.Titulo,
 		Descricao:    postagem.Descricao,
 		ImagemBase64: postagem.ImagemBase64,

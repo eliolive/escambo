@@ -25,6 +25,17 @@ func NewHandler(svc PropostaSvc) *Handler {
 	return &Handler{svc: svc}
 }
 
+// GetPropostas godoc
+// @Summary      Lista propostas do usuário
+// @Description  Retorna propostas enviadas ou recebidas por um usuário com base no tipo e status
+// @Tags         propostas
+// @Param        id    path     string  true  "ID do usuário"
+// @Param        tipo  query    string  true  "Tipo de proposta (enviadas ou recebidas)"
+// @Param        status query   string  false "Status da proposta (pendente, aceita, recusada)"
+// @Produce      json
+// @Success      200  {array}   []propostarepo.PropostaFormatada
+// @Failure      500  {string}  string
+// @Router       /propostas/{id} [get]
 func (h *Handler) GetPropostas(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id := vars["id"]
@@ -51,6 +62,17 @@ func (h *Handler) GetPropostas(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// InsertProposta godoc
+// @Summary      Cadastra nova proposta
+// @Description  Registra uma proposta de troca com base nos dados enviados
+// @Tags         propostas
+// @Accept       json
+// @Produce      json
+// @Param        proposta  body   propostarepo.PropostaWriteModel  true  "Dados da proposta"
+// @Success      201  {string}  string  "created"
+// @Failure      400  {string}  string  "body inválido"
+// @Failure      500  {string}  string  "erro ao salvar proposta"
+// @Router       /propostas [post]
 func (h *Handler) InsertProposta(w http.ResponseWriter, r *http.Request) {
 	var proposta propostarepo.PropostaWriteModel
 
