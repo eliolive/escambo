@@ -386,9 +386,6 @@ const docTemplate = `{
                 "email": {
                     "type": "string"
                 },
-                "id": {
-                    "type": "string"
-                },
                 "nome": {
                     "type": "string"
                 },

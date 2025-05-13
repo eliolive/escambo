@@ -55,8 +55,6 @@ definitions:
     properties:
       email:
         type: string
-      id:
-        type: string
       nome:
         type: string
       senha:

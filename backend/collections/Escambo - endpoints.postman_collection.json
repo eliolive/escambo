@@ -167,7 +167,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/trocas/140382f9-ef85-469e-874d-02fda117f687?tipo=recebidas",
+					"raw": "http://localhost:8080/trocas/140382f9-ef85-469e-874d-02fda117f687/historico?tipo=recebidas",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -175,7 +175,8 @@
 					"port": "8080",
 					"path": [
 						"trocas",
-						"140382f9-ef85-469e-874d-02fda117f687"
+						"140382f9-ef85-469e-874d-02fda117f687",
+						"historico"
 					],
 					"query": [
 						{
