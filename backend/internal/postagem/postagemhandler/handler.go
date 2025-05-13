@@ -12,7 +12,7 @@ import (
 
 type PostagemService interface {
 	GetPostagem(ctx context.Context, postID string) (postagemsvc.Postagem, error)
-	UpsavePostagem(ctx context.Context, post postagemsvc.Postagem) error
+	InsertPostagem(ctx context.Context, post postagemsvc.Postagem) error
 }
 
 type Handler struct {
@@ -42,7 +42,7 @@ func (h *Handler) GetPost(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (h *Handler) UpsavePost(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) InsertPostagem(w http.ResponseWriter, r *http.Request) {
 	var post postagemsvc.Postagem
 
 	if err := json.NewDecoder(r.Body).Decode(&post); err != nil {
@@ -50,12 +50,12 @@ func (h *Handler) UpsavePost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := h.Service.UpsavePostagem(r.Context(), post); err != nil {
+	if err := h.Service.InsertPostagem(r.Context(), post); err != nil {
 		http.Error(w, fmt.Sprintf("erro ao salvar postagem: %v", err), http.StatusInternalServerError)
 		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("Postagem inserida/atualizada com sucesso"))
+	w.Write([]byte("Postagem inserida com sucesso"))
 }

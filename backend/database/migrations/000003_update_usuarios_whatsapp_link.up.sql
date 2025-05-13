@@ -1,0 +1,2 @@
+ALTER TABLE usuarios
+ALTER COLUMN whatsapp_link DROP NOT NULL;

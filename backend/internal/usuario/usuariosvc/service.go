@@ -16,17 +16,16 @@ func NewService(repository usuariorepo.Repository) *Service {
 	return &Service{repository: repository}
 }
 
-func (s *Service) UpsertUsuario(ctx context.Context, usuario usuariorepo.Usuario) error {
+func (s *Service) InsertUsuario(ctx context.Context, usuario usuariorepo.Usuario) error {
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(usuario.Senha), bcrypt.DefaultCost)
 	if err != nil {
 		return fmt.Errorf("erro ao gerar hash da senha: %w", err)
 	}
 	usuario.Senha = string(hashedPassword)
 
-	err = s.repository.UpsertUsuario(ctx, usuario)
-	if err != nil {
-		return fmt.Errorf("erro ao executar upsert de usuário: %w", err)
-	}
+	return s.repository.InsertUsuario(ctx, usuario)
+}
 
-	return nil
+func (s *Service) UpdateUsuario(ctx context.Context, id string, usuario usuariorepo.Usuario) error {
+	return s.repository.UpdateUsuario(ctx, id, usuario)
 }

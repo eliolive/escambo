@@ -5,12 +5,12 @@ import (
 )
 
 type Postagem struct {
-	ID        string `json:"id"`
-	Titulo    string `json:"titulo"`
-	Descricao string `json:"descricao"`
-	ImagemURL string `json:"imagem_url"`
-	UserID    string `json:"user_id"`
-	Categoria string `json:"categoria"`
+	ID           string `json:"id"`
+	Titulo       string `json:"titulo"`
+	Descricao    string `json:"descricao"`
+	ImagemBase64 string `json:"imagem_base64"`
+	UserID       string `json:"user_id"`
+	Categoria    string `json:"categoria"`
 }
 
 func (p *Postagem) Validate() error {
@@ -20,10 +20,6 @@ func (p *Postagem) Validate() error {
 
 	if p.Descricao == "" {
 		return errors.New("a descrição é obrigatória")
-	}
-
-	if p.ImagemURL == "" {
-		return errors.New("a URL da imagem é obrigatória")
 	}
 
 	if p.Categoria == "" {

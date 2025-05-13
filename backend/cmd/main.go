@@ -2,15 +2,7 @@ package main
 
 import (
 	"database/sql"
-	"escambo/internal/postagem/postagemhandler"
-	"escambo/internal/postagem/postagemrepo"
-	"escambo/internal/postagem/postagemsvc"
-	"escambo/internal/proposta/propostahandler"
-	"escambo/internal/proposta/propostarepo"
-	"escambo/internal/proposta/propostasvc"
-	"escambo/internal/usuario/usuariohandler"
-	"escambo/internal/usuario/usuariorepo"
-	"escambo/internal/usuario/usuariosvc"
+	"escambo/internal/routes"
 	"log"
 	"net/http"
 	"os"
@@ -29,37 +21,24 @@ func main() {
 	}
 
 	postgresURI := os.Getenv("DATABASE_URL")
+	if postgresURI == "" {
+		log.Panic("DATABASE_URL is not set")
+	}
+
 	db, err := sql.Open("postgres", postgresURI)
 	if err != nil {
-		log.Panic("Openning connection: ", err)
+		log.Panic("Error opening database connection: ", err)
 	}
+	defer db.Close()
 
 	err = db.Ping()
 	if err != nil {
-		db.Close()
-		log.Panic("Ping DB", err)
+		log.Panic("Error pinging the database: ", err)
 	}
 
-	postRepo := postagemrepo.NewRepository(db)
-	postService := postagemsvc.NewService(postRepo)
-	postHandler := postagemhandler.NewHandler(postService)
-
 	r := mux.NewRouter()
-	r.HandleFunc("/postagens/{id}", postHandler.GetPost).Methods("GET")
-	r.HandleFunc("/postagens", postHandler.UpsavePost).Methods("PUT")
 
-	userRepo := usuariorepo.NewRepository(db)
-	usuarioService := usuariosvc.NewService(userRepo)
-	usuarioHandler := usuariohandler.NewHandler(usuarioService)
-
-	r.HandleFunc("/usuarios", usuarioHandler.UpsertUsuario).Methods("PUT")
-
-	propostaRepo := propostarepo.NewRepository(db)
-	propostaService := propostasvc.NewService(propostaRepo)
-	propostaHandler := propostahandler.NewHandler(&propostaService)
-
-	r.HandleFunc("/propostas", propostaHandler.UpsaveProposta).Methods("PUT")
-	r.HandleFunc("/propostas", propostaHandler.GetPropostas).Methods("GET")
+	routes.RegisterRoutes(r, db)
 
 	corsHandler := cors.New(cors.Options{AllowedOrigins: []string{"*"},
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
@@ -71,6 +50,7 @@ func main() {
 	if port == "" {
 		port = "8080"
 	}
+
 	log.Println("Servidor rodando na porta " + port + "...")
 	log.Fatal(http.ListenAndServe(":"+port, corsHandler))
 

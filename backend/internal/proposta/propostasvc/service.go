@@ -6,8 +6,8 @@ import (
 )
 
 type PropostaRepository interface {
-	UpsaveProposta(ctx context.Context, proposta propostarepo.PropostaWriteModel) error
-	GetPropostas(ctx context.Context, filter propostarepo.PropostasQueryFilter) ([]propostarepo.PropostaReadModel, error)
+	InsertProposta(ctx context.Context, proposta propostarepo.PropostaWriteModel) error
+	GetPropostas(ctx context.Context, filter propostarepo.PropostasQueryFilter) ([]propostarepo.PropostaFormatada, error)
 }
 
 type Service struct {
@@ -20,19 +20,18 @@ func NewService(repo PropostaRepository) Service {
 	}
 }
 
-func (s *Service) GetPropostas(ctx context.Context, filter PropostasFilter) ([]propostarepo.PropostaReadModel, error) {
+func (s *Service) GetPropostas(ctx context.Context, filter PropostasFilter) ([]propostarepo.PropostaFormatada, error) {
 	return s.repo.GetPropostas(ctx, propostarepo.PropostasQueryFilter{
 		UsuarioID: filter.UsuarioID,
-		Status:    filter.Status,
-		FromTS:    filter.FromTS,
-		ToTS:      filter.ToTS,
+		Status:    filter.Status, //opcional
+		Tipo:      filter.Tipo,   //obrigatorio
 	})
 }
 
-func (s *Service) UpsaveProposta(ctx context.Context, proposta propostarepo.PropostaWriteModel) error {
+func (s *Service) InsertProposta(ctx context.Context, proposta propostarepo.PropostaWriteModel) error {
 	if err := proposta.Validate(); err != nil {
 		return err
 	}
 
-	return s.repo.UpsaveProposta(ctx, proposta)
+	return s.repo.InsertProposta(ctx, proposta)
 }
