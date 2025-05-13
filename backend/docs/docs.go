@@ -99,7 +99,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/propostas": {
+        "/trocas": {
             "post": {
                 "description": "Registra uma proposta de troca com base nos dados enviados",
                 "consumes": [
@@ -109,7 +109,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "propostas"
+                    "trocas"
                 ],
                 "summary": "Cadastra nova proposta",
                 "parameters": [
@@ -145,14 +145,14 @@ const docTemplate = `{
                 }
             }
         },
-        "/propostas/{id}": {
+        "/trocas/{id}/historico": {
             "get": {
                 "description": "Retorna propostas enviadas ou recebidas por um usuário com base no tipo e status",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "propostas"
+                    "trocas"
                 ],
                 "summary": "Lista propostas do usuário",
                 "parameters": [

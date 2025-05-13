@@ -121,7 +121,7 @@ paths:
       summary: Buscar detalhes da postagem
       tags:
       - postagens
-  /propostas:
+  /trocas:
     post:
       consumes:
       - application/json
@@ -150,8 +150,8 @@ paths:
             type: string
       summary: Cadastra nova proposta
       tags:
-      - propostas
-  /propostas/{id}:
+      - trocas
+  /trocas/{id}/historico:
     get:
       description: Retorna propostas enviadas ou recebidas por um usuário com base
         no tipo e status
@@ -187,7 +187,7 @@ paths:
             type: string
       summary: Lista propostas do usuário
       tags:
-      - propostas
+      - trocas
   /usuarios:
     post:
       consumes:
