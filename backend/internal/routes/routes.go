@@ -24,7 +24,7 @@ func RegisterRoutes(r *mux.Router, db *sql.DB) {
 	postService := postagemsvc.NewService(postRepo)
 	postHandler := postagemhandler.NewHandler(postService)
 
-	r.HandleFunc("/postagens/{id}", postHandler.GetDetalhesPostagem).Methods("GET")
+	r.HandleFunc("/postagens/{id}/detalhes", postHandler.GetDetalhesPostagem).Methods("GET")
 	r.HandleFunc("/postagens", postHandler.InsertPostagem).Methods("POST")
 
 	userRepo := usuariorepo.NewRepository(db)
@@ -39,7 +39,7 @@ func RegisterRoutes(r *mux.Router, db *sql.DB) {
 	propostaHandler := propostahandler.NewHandler(&propostaService)
 
 	r.HandleFunc("/trocas", propostaHandler.InsertProposta).Methods("POST")
-	r.HandleFunc("/trocas/{id}", propostaHandler.GetPropostas).Methods("GET")
+	r.HandleFunc("/trocas/{id}/historico", propostaHandler.GetPropostas).Methods("GET")
 
 	r.PathPrefix("/swagger/").Handler(httpSwagger.WrapHandler)
 
